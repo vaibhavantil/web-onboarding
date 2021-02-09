@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import styled from '@emotion/styled'
-import { CookieStorage } from 'cookie-storage'
 import { colorsV3 } from '@hedviginsurance/brand'
 import { Section } from 'pages/OfferNew/components'
 import { OfferData } from 'pages/OfferNew/types'
 import { LARGE_SCREEN_MEDIA_QUERY } from 'utils/mediaQueries'
-import { useRedeemCodeMutation, useRedeemedCampaignsQuery } from 'data/graphql'
+import { useRedeemedCampaignsQuery } from 'data/graphql'
 import { isBundle } from '../utils'
 import { HeroOfferDetails } from './HeroOfferDetails'
 import { Sidebar } from './Sidebar'
@@ -96,33 +95,13 @@ export const Introduction: React.FC<Props> = ({
   const hasDataCollection =
     !isBundle(offerData) && !!offerData.quotes[0].dataCollectionId
 
-  const [redeemCode] = useRedeemCodeMutation()
-  const {
-    data: campaignData,
-    refetch: refetchCampaigns,
-  } = useRedeemedCampaignsQuery()
+  const { refetch: refetchCampaigns } = useRedeemedCampaignsQuery()
 
   const refetchAll = useCallback(async () => {
     await refetch()
     await refetchCampaigns()
     return
   }, [refetch, refetchCampaigns])
-
-  useEffect(() => {
-    const campaignCodes = campaignData?.redeemedCampaigns.map(
-      (campaign) => campaign.code,
-    )
-    const cookieStorage = new CookieStorage()
-    const preRedeemedCode = cookieStorage.getItem('_hvcode')
-    if (
-      preRedeemedCode &&
-      !campaignCodes?.includes(preRedeemedCode.toUpperCase())
-    ) {
-      redeemCode({ variables: { code: preRedeemedCode } }).then(() =>
-        refetchAll(),
-      )
-    }
-  }, [redeemCode, campaignData, refetchAll])
 
   return (
     <Section>

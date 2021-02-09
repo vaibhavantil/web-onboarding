@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import { colorsV3, HedvigSymbol } from '@hedviginsurance/brand'
 import { CookieStorage } from 'cookie-storage'
@@ -8,6 +8,7 @@ import { Market, useMarket } from 'components/utils/CurrentLocale'
 import {
   useRemoveDiscountCodeMutation,
   useRedeemedCampaignsQuery,
+  useRedeemCodeMutation,
 } from 'data/graphql'
 import {
   getDiscountText,
@@ -136,8 +137,25 @@ export const Sidebar: React.FC<Props> = ({
   const [discountCodeModalIsOpen, setDiscountCodeModalIsOpen] = useState(false)
   const [isSidebarVisible, setIsSidebarVisible] = useState(true)
   const [removeDiscountCode] = useRemoveDiscountCodeMutation()
+  const [redeemCode] = useRedeemCodeMutation()
   const { data: campaignData } = useRedeemedCampaignsQuery()
   const redeemedCampaigns = campaignData ? campaignData.redeemedCampaigns : []
+
+  useEffect(() => {
+    const campaignCodes = campaignData?.redeemedCampaigns.map(
+      (campaign) => campaign.code,
+    )
+    const cookieStorage = new CookieStorage()
+    const preRedeemedCode = cookieStorage.getItem('_hvcode')
+    if (
+      preRedeemedCode &&
+      !campaignCodes?.includes(preRedeemedCode.toUpperCase())
+    ) {
+      redeemCode({ variables: { code: preRedeemedCode } }).then(() =>
+        refetchAll(),
+      )
+    }
+  }, [redeemCode, campaignData, refetchAll])
 
   const discountText = getDiscountText(textKeys)(
     redeemedCampaigns,
