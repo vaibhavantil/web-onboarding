@@ -65,7 +65,6 @@ export const OfferNew: React.FC = () => {
   const variation = useVariation()
   const quoteIds = storage.session.getSession()?.quoteIds ?? []
   const { data: redeemedCampaignsData } = useRedeemedCampaignsQuery()
-  const redeemedCampaigns = redeemedCampaignsData?.redeemedCampaigns ?? []
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const closeDetailsModal = () => setIsDetailsModalOpen(false)
   const openDetailsModal = () => setIsDetailsModalOpen(true)
@@ -108,11 +107,10 @@ export const OfferNew: React.FC = () => {
     : null
 
   if (offerData) {
-    trackOfferGTM(
-      'offer_created',
-      offerData,
-      redeemedCampaigns[0]?.incentive?.__typename === 'MonthlyCostDeduction',
-    )
+    const redeemedCampaigns = redeemedCampaignsData?.redeemedCampaigns ?? []
+    const hasReferralCode =
+      redeemedCampaigns[0]?.incentive?.__typename === 'MonthlyCostDeduction'
+    trackOfferGTM('offer_created', offerData, hasReferralCode)
   }
 
   return (
