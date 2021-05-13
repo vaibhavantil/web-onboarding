@@ -136,7 +136,7 @@
     "formik": "^2.0.8",
     "framer-motion": "^1.6.15",
     "graphql": "^14",
-    "graphql-tag": "^2.10.0",
+    "graphql-tag": "^2.12.2",
     "hex-to-rgba": "^2.0.1",
     "is-mobile": "^2.0.1",
     "koa": "^2.13.0",
