@@ -123,7 +123,7 @@
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-mount": "^4.0.0",
     "@types/koa-static": "^4.0.1",
-    "@types/node-fetch": "^2.5.7",
+    "@types/node-fetch": "^2.5.10",
     "@types/react-helmet": "^5.0.0",
     "axios": "^0.21.1",
     "color": "^3.1.2",
