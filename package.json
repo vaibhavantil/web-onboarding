@@ -176,7 +176,7 @@
     "typescript": "^3.9.6",
     "typescript-logging": "^0.6.3",
     "uuid": "^3.3.2",
-    "yup": "^0.26.6"
+    "yup": "^0.30.0"
   },
   "husky": {
     "hooks": {
